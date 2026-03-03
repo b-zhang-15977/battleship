@@ -12,7 +12,9 @@ export default function Ship(shipLength) {
     /**
      * Increaes the amount of times the ship has been hit
      */
-    const hit = () => { }
+    const hit = () => { 
+        hits++;
+    }
 
     /**
      * Returns if the ship has been sunk
