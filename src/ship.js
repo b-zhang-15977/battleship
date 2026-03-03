@@ -5,7 +5,7 @@ export default function Ship(shipLength) {
     // object properties
     let length = shipLength;
     let hits = 0;
-    let sunk = 0;
+    let sunk = false;
 
     // methods
     
@@ -19,7 +19,9 @@ export default function Ship(shipLength) {
     /**
      * Returns if the ship has been sunk
      */
-    const isSunk = () => { }
+    const isSunk = () => { 
+        length - hits  > 0 ? sunk = true : sunk = false;
+    }
 
     return {hit, isSunk}
 }
