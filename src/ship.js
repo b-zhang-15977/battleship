@@ -1,14 +1,18 @@
 /**
  * Ship object - creates a ship object which acts like a ship in battleship
  */
-export default function Ship(shipLength) {
+export default function Ship(l) {
     // object properties
-    let length = shipLength;
-    let hits = 0;
-    let sunk = false;
+    let LENGTH = l;
+    let HITS = 0;
+    let SUNK = false;
 
     // methods
-    
+
+    // getters
+    const length = () => LENGTH;
+    const hits = () => HITS;
+
     /**
      * Increaes the amount of times the ship has been hit
      */
@@ -20,8 +24,9 @@ export default function Ship(shipLength) {
      * Returns if the ship has been sunk
      */
     const isSunk = () => { 
-        length - hits  > 0 ? sunk = true : sunk = false;
+        length - hits > 0 ? SUNK = false : SUNK = true;
+        return SUNK;
     }
 
-    return {length, hits, sunk, hit, isSunk}
+    return {length, hits, hit, isSunk}
 }
