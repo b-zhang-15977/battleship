@@ -23,5 +23,5 @@ export default function Ship(shipLength) {
         length - hits  > 0 ? sunk = true : sunk = false;
     }
 
-    return {hit, isSunk}
+    return {length, hits, sunk, hit, isSunk}
 }
