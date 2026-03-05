@@ -12,20 +12,17 @@ export default function Ship(l) {
     // getters
     const length = () => LENGTH;
     const hits = () => HITS;
-
+    const isSunk = () => SUNK;
+    
     /**
      * Increaes the amount of times the ship has been hit
      */
     const hit = () => { 
-        hits++;
-    }
-
-    /**
-     * Returns if the ship has been sunk
-     */
-    const isSunk = () => { 
-        length - hits > 0 ? SUNK = false : SUNK = true;
-        return SUNK;
+        if (length - hits > 0) {
+            hits++;  
+        } else {
+            SUNK = true;
+        }
     }
 
     return {length, hits, hit, isSunk}
