@@ -9,7 +9,7 @@ export default function Ship(l) {
 
     // methods
 
-    // getters
+    /** getters **/
     const length = () => LENGTH;
     const hits = () => HITS;
     const isSunk = () => SUNK;
@@ -17,13 +17,15 @@ export default function Ship(l) {
     /**
      * Increaes the amount of times the ship has been hit
      */
-    const hit = () => { 
-        if (LENGTH - HITS > 0) {
-            HITS++;  
-        } else {
-            SUNK = true;
+    const hit = () => {
+        if (HITS < LENGTH) {
+            HITS++;
+            if (HITS === LENGTH) {
+                SUNK = true;
+            }
         }
-    }
+    };
+
 
     return {length, hits, hit, isSunk}
 }

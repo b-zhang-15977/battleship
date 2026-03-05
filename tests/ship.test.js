@@ -16,7 +16,7 @@ test("hit() increments hits by 1", () => {
   ship.hit();
 
   expect(ship.hits()).toBe(1);
-  expect(ship.isSUnk()).toBe(false);
+  expect(ship.isSunk()).toBe(false);
 });
 
 test("isSunk() returns false when hits < length", () => {
@@ -43,7 +43,7 @@ test("extra hits do not increase hits beyond length", () => {
   ship.hit(); // extra hit
 
   expect(ship.hits()).toBe(2); 
-  expect(ship.sunk()).toBe(true);
+  expect(ship.isSunk()).toBe(true);
 });
 
 test("multiple ships maintain independent state", () => {
