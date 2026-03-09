@@ -67,7 +67,7 @@ export default function Board(size) {
             break;
         default:
             break;
-       } 
+        }
 
        allSunk = board.flat().some(cell => cell.state === CellState.SHIP);
     }
