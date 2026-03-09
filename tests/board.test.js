@@ -2,23 +2,29 @@
 import Gameboard from "../gameboard";
 import Ship from "../ship";
 
-// Mock Ship factory so we can track hit() and isSunk()
+const CellState = Object.freeze({
+  EMPTY: 0,
+  SHIP: 1,
+  HIT: 2,
+  MISS: 3,
+});
+
+// Mock Ship factory
 jest.mock("../ship");
 
-describe("Gameboard Factory", () => {
+describe("Gameboard Factory with CellState enum", () => {
   beforeEach(() => {
     Ship.mockClear();
   });
 
-  test("initializes an empty grid", () => {
+  test("initializes a grid of EMPTY cells", () => {
     const board = Gameboard(5);
 
-    expect(board.grid.length).toBe(5);
-    expect(board.grid[0].length).toBe(5);
-
-    // All cells should be null
     board.grid.forEach(row =>
-      row.forEach(cell => expect(cell).toBeNull())
+      row.forEach(cell => {
+        expect(cell.state).toBe(CellState.EMPTY);
+        expect(cell.ship).toBeNull();
+      })
     );
   });
 
@@ -29,9 +35,9 @@ describe("Gameboard Factory", () => {
     const board = Gameboard(10);
     board.placeShip(3, 2, 4, true);
 
-    expect(board.grid[2][4]).toBe(mockShip);
-    expect(board.grid[2][5]).toBe(mockShip);
-    expect(board.grid[2][6]).toBe(mockShip);
+    expect(board.grid[2][4]).toEqual({ state: CellState.SHIP, ship: mockShip });
+    expect(board.grid[2][5]).toEqual({ state: CellState.SHIP, ship: mockShip });
+    expect(board.grid[2][6]).toEqual({ state: CellState.SHIP, ship: mockShip });
   });
 
   test("places a ship vertically", () => {
@@ -41,21 +47,22 @@ describe("Gameboard Factory", () => {
     const board = Gameboard(10);
     board.placeShip(3, 1, 1, false);
 
-    expect(board.grid[1][1]).toBe(mockShip);
-    expect(board.grid[2][1]).toBe(mockShip);
-    expect(board.grid[3][1]).toBe(mockShip);
+    expect(board.grid[1][1]).toEqual({ state: CellState.SHIP, ship: mockShip });
+    expect(board.grid[2][1]).toEqual({ state: CellState.SHIP, ship: mockShip });
+    expect(board.grid[3][1]).toEqual({ state: CellState.SHIP, ship: mockShip });
   });
 
-  test("records a miss when attacking empty water", () => {
+  test("records a MISS when attacking empty water", () => {
     const board = Gameboard(10);
 
     const result = board.receiveAttack(0, 0);
 
     expect(result).toBe("miss");
-    expect(board.misses).toContainEqual([0, 0]);
+    expect(board.grid[0][0].state).toBe(CellState.MISS);
+    expect(board.grid[0][0].ship).toBeNull();
   });
 
-  test("calls hit() on a ship when attacked", () => {
+  test("calls hit() on a ship and marks HIT", () => {
     const mockShip = { hit: jest.fn(), isSunk: jest.fn() };
     Ship.mockReturnValue(mockShip);
 
@@ -66,6 +73,7 @@ describe("Gameboard Factory", () => {
 
     expect(result).toBe("hit");
     expect(mockShip.hit).toHaveBeenCalledTimes(1);
+    expect(board.grid[0][0].state).toBe(CellState.HIT);
   });
 
   test("allShipsSunk returns false when at least one ship is not sunk", () => {
