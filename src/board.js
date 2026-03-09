@@ -19,17 +19,17 @@ export default function Board(size) {
      * board - 2d board storing the state of each cell, as well as a refrence to a ship class.
      * allSunk - true if all ships are sunk, else false.
      */
-    const board = Array.from(Array(size), () => new Array(size).fill({
-        state: CellState.EMPTY,
-        ship: null
-    }));
+    const board = Array.from({ length: size }, () =>
+        Array.from({ length: size }, () => ({
+            state: CellState.EMPTY,
+            ship: null
+    })));
     let allSunk = true;
 
     // Methods
 
     // getters 
-    const Board = () => {board}
-    const sunk = () => {allSunk}
+    const sunk = () => allSunk
 
     /**
      * Places an instance of a ship on the board.
@@ -73,8 +73,8 @@ export default function Board(size) {
             break;
         }
 
-       allSunk = !(board.flat().some(cell => cell.state === CellState.SHIP));
+       allSunk = !board.flat().some(cell => cell.state === CellState.SHIP);
     }
 
-    return {Board, sunk, placeShip, recieveAttack}
+    return {board, sunk, placeShip, recieveAttack}
 }
