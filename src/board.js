@@ -56,7 +56,19 @@ export default function Board(size) {
      *  x - x cooardinate of attack
      *  y - y cooardinate of attack
      */
-    const recieveAttack = (x, y) => {}
+    const recieveAttack = (x, y) => {
+       switch (board[x][y].state) {
+        case CellState.EMPTY:
+            board[x][y].state = CellState.MISS;
+            break;
+        case CellState.SHIP:
+            board[x][y].state = CellState.HIT;
+            board[x][y].ship.hit();
+            break;
+        default:
+            break;
+       } 
+    }
 
     return {board, placeShip, recieveAttack}
 }
