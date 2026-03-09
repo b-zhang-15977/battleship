@@ -23,7 +23,7 @@ export default function Board(size) {
         state: CellState.EMPTY,
         ship: null
     }));
-    const allSunk = true;
+    let allSunk = true;
 
     // Methods
 
@@ -68,7 +68,9 @@ export default function Board(size) {
         default:
             break;
        } 
+
+       allSunk = board.flat().some(cell => cell.state === CellState.SHIP);
     }
 
-    return {board, placeShip, recieveAttack}
+    return {board, allSunk, placeShip, recieveAttack}
 }
