@@ -43,12 +43,12 @@ export default function Board(size) {
         allSunk = true;
 
         if (isHorizontal) {
-            for (let i = x; i < length; i++) {
+            for (let i = x; i < x + length; i++) {
                 board[i][y].state =  CellState.SHIP;
                 board[i][y].ship = ship;
             }
         } else {
-            for (let j = y; j < length; j++) {
+            for (let j = y; j < y + length; j++) {
                 board[x][j].state = CellState.SHIP;
                 board[x][j].ship = ship;
             }
