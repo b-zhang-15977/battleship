@@ -27,6 +27,10 @@ export default function Board(size) {
 
     // Methods
 
+    // getters 
+    const Board = () => {board}
+    const sunk = () => {allSunk}
+
     /**
      * Places an instance of a ship on the board.
      *  x - x cooardinate of ship (starting pos.)
@@ -72,5 +76,5 @@ export default function Board(size) {
        allSunk = !(board.flat().some(cell => cell.state === CellState.SHIP));
     }
 
-    return {board, allSunk, placeShip, recieveAttack}
+    return {Board, sunk, placeShip, recieveAttack}
 }
