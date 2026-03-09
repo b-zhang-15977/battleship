@@ -14,7 +14,7 @@ export default function Board(size) {
     
 
     // Properties:
-    
+
     /** 
      * board - 2d board storing the state of each cell, as well as a refrence to a ship class.
      * allSunk - true if all ships are sunk, else false.
@@ -31,9 +31,10 @@ export default function Board(size) {
      * Places an instance of a ship on the board.
      *  x - x cooardinate of ship (starting pos.)
      *  y - y cooardinate of ship (starting pos.)
+     *  length - length of ship
      *  isHorizontal - if the ship is being placed horizontally or vertically.
      */
-    const placeShip = (x, y, isHorizontal) => {}
+    const placeShip = (x, y, length, isHorizontal) => {}
 
     /**
      * Takes in coordinates of an attack, then determines if the attack hit or missed.
