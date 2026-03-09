@@ -34,7 +34,22 @@ export default function Board(size) {
      *  length - length of ship
      *  isHorizontal - if the ship is being placed horizontally or vertically.
      */
-    const placeShip = (x, y, length, isHorizontal) => {}
+    const placeShip = (x, y, length, isHorizontal) => {
+        const ship = Ship(length);
+        allSunk = true;
+
+        if (isHorizontal) {
+            for (let i = x; i < length; i++) {
+                board[i][y].state =  CellState.SHIP;
+                board[i][y].ship = ship;
+            }
+        } else {
+            for (let j = y; j < length; j++) {
+                board[x][j].state = CellState.SHIP;
+                board[x][j].ship = ship;
+            }
+        }
+    }
 
     /**
      * Takes in coordinates of an attack, then determines if the attack hit or missed.
