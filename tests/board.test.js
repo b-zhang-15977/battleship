@@ -96,14 +96,14 @@ describe("Corrected Board Factory", () => {
     board.placeShip(0, 0, 2, true);
 
     // After placement, ships exist → allSunk should be false
-    expect(board.sunk).toBe(false);
+    expect(board.sunk()).toBe(false);
 
     // Hit first segment
     board.recieveAttack(0, 0);
-    expect(board.sunk).toBe(false);
+    expect(board.sunk()).toBe(false);
 
     // Hit second segment
     board.recieveAttack(1, 0);
-    expect(board.sunk).toBe(true);
+    expect(board.sunk()).toBe(true);
   });
 });
