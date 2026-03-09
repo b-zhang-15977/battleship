@@ -1,6 +1,6 @@
-// gameboard.test.js
-import Gameboard from "../gameboard";
-import Ship from "../ship";
+// board.test.js
+import Board from "/src/board.js";
+import Ship from "/src/ship.js";
 
 const CellState = Object.freeze({
   EMPTY: 0,
@@ -10,17 +10,17 @@ const CellState = Object.freeze({
 });
 
 // Mock Ship factory
-jest.mock("../ship");
+jest.mock("/src/ship.js");
 
-describe("Gameboard Factory with CellState enum", () => {
+describe("Board Factory", () => {
   beforeEach(() => {
     Ship.mockClear();
   });
 
-  test("initializes a grid of EMPTY cells", () => {
-    const board = Gameboard(5);
+  test("initializes a board of EMPTY cells", () => {
+    const board = Board(5);
 
-    board.grid.forEach(row =>
+    board.board.forEach(row =>
       row.forEach(cell => {
         expect(cell.state).toBe(CellState.EMPTY);
         expect(cell.ship).toBeNull();
@@ -32,77 +32,62 @@ describe("Gameboard Factory with CellState enum", () => {
     const mockShip = { hit: jest.fn(), isSunk: jest.fn() };
     Ship.mockReturnValue(mockShip);
 
-    const board = Gameboard(10);
-    board.placeShip(3, 2, 4, true);
+    const board = Board(10);
+    board.placeShip(2, 3, 3, true); // x=2, y=3, length=3
 
-    expect(board.grid[2][4]).toEqual({ state: CellState.SHIP, ship: mockShip });
-    expect(board.grid[2][5]).toEqual({ state: CellState.SHIP, ship: mockShip });
-    expect(board.grid[2][6]).toEqual({ state: CellState.SHIP, ship: mockShip });
+    expect(board.board[2][3]).toEqual({ state: CellState.SHIP, ship: mockShip });
+    expect(board.board[2][4]).toEqual({ state: CellState.SHIP, ship: mockShip });
+    expect(board.board[2][5]).toEqual({ state: CellState.SHIP, ship: mockShip });
   });
 
   test("places a ship vertically", () => {
     const mockShip = { hit: jest.fn(), isSunk: jest.fn() };
     Ship.mockReturnValue(mockShip);
 
-    const board = Gameboard(10);
-    board.placeShip(3, 1, 1, false);
+    const board = Board(10);
+    board.placeShip(1, 1, 3, false);
 
-    expect(board.grid[1][1]).toEqual({ state: CellState.SHIP, ship: mockShip });
-    expect(board.grid[2][1]).toEqual({ state: CellState.SHIP, ship: mockShip });
-    expect(board.grid[3][1]).toEqual({ state: CellState.SHIP, ship: mockShip });
+    expect(board.board[1][1]).toEqual({ state: CellState.SHIP, ship: mockShip });
+    expect(board.board[2][1]).toEqual({ state: CellState.SHIP, ship: mockShip });
+    expect(board.board[3][1]).toEqual({ state: CellState.SHIP, ship: mockShip });
   });
 
-  test("records a MISS when attacking empty water", () => {
-    const board = Gameboard(10);
+  test("records a MISS when attacking an EMPTY cell", () => {
+    const board = Board(10);
 
-    const result = board.receiveAttack(0, 0);
+    const result = board.recieveAttack(0, 0);
 
     expect(result).toBe("miss");
-    expect(board.grid[0][0].state).toBe(CellState.MISS);
-    expect(board.grid[0][0].ship).toBeNull();
+    expect(board.board[0][0].state).toBe(CellState.MISS);
+    expect(board.board[0][0].ship).toBeNull();
   });
 
-  test("calls hit() on a ship and marks HIT", () => {
+  test("records a HIT and calls ship.hit() when attacking a ship cell", () => {
     const mockShip = { hit: jest.fn(), isSunk: jest.fn() };
     Ship.mockReturnValue(mockShip);
 
-    const board = Gameboard(10);
-    board.placeShip(2, 0, 0, true);
+    const board = Board(10);
+    board.placeShip(0, 0, 2, true);
 
-    const result = board.receiveAttack(0, 0);
+    const result = board.recieveAttack(0, 0);
 
     expect(result).toBe("hit");
     expect(mockShip.hit).toHaveBeenCalledTimes(1);
-    expect(board.grid[0][0].state).toBe(CellState.HIT);
+    expect(board.board[0][0].state).toBe(CellState.HIT);
   });
 
-  test("allShipsSunk returns false when at least one ship is not sunk", () => {
-    const mockShip1 = { hit: jest.fn(), isSunk: jest.fn(() => false) };
-    const mockShip2 = { hit: jest.fn(), isSunk: jest.fn(() => true) };
+  test("multiple cells reference the same ship instance", () => {
+    const mockShip = { hit: jest.fn(), isSunk: jest.fn() };
+    Ship.mockReturnValue(mockShip);
 
-    Ship
-      .mockReturnValueOnce(mockShip1)
-      .mockReturnValueOnce(mockShip2);
+    const board = Board(10);
+    board.placeShip(0, 0, 3, true);
 
-    const board = Gameboard(10);
-    board.placeShip(2, 0, 0, true);
-    board.placeShip(3, 5, 5, true);
+    const a = board.board[0][0].ship;
+    const b = board.board[0][1].ship;
+    const c = board.board[0][2].ship;
 
-    expect(board.allShipsSunk()).toBe(false);
-  });
-
-  test("allShipsSunk returns true when all ships are sunk", () => {
-    const mockShip1 = { hit: jest.fn(), isSunk: jest.fn(() => true) };
-    const mockShip2 = { hit: jest.fn(), isSunk: jest.fn(() => true) };
-
-    Ship
-      .mockReturnValueOnce(mockShip1)
-      .mockReturnValueOnce(mockShip2);
-
-    const board = Gameboard(10);
-    board.placeShip(2, 0, 0, true);
-    board.placeShip(3, 5, 5, true);
-
-    expect(board.allShipsSunk()).toBe(true);
+    expect(a).toBe(b);
+    expect(b).toBe(c);
   });
 });
