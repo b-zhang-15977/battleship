@@ -40,7 +40,7 @@ export default function Board(size) {
      */
     const placeShip = (x, y, length, isHorizontal) => {
         const ship = Ship(length);
-        allSunk = true;
+        allSunk = false;
 
         if (isHorizontal) {
             for (let i = x; i < x + length; i++) {
